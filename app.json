@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourcompany.foob"
     },
     "android": {
       "adaptiveIcon": {
@@ -33,6 +34,7 @@
           "backgroundColor": "#ffffff"
         }
       ]
+      
     ],
     "experiments": {
       "typedRoutes": true
