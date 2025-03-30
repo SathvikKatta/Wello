@@ -1,166 +1,133 @@
-import {
-  CameraMode,
-  CameraType,
-  CameraView,
-  useCameraPermissions,
-} from "expo-camera";
-import { useRef, useState } from "react";
-import { Button, Pressable, StyleSheet, Text, View } from "react-native";
-import { Image } from "expo-image";
+import React, { useState, useEffect } from "react";
+import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { Camera, CameraView } from "expo-camera";
 import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { FontAwesome6 } from "@expo/vector-icons";
 
-const App = () => {
-  const [permission, requestPermission] = useCameraPermissions();
-  const ref = useRef<CameraView>(null);
-  const [uri, setUri] = useState<string | null>(null);
-  const [mode, setMode] = useState<CameraMode>("picture");
-  const [facing, setFacing] = useState<CameraType>("back");
-  const [recording, setRecording] = useState(false);
+type BarcodeData = {
+  type: string;
+  data: string;
+};
 
-  if (!permission) {
-    return null;
+export default function App() {
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [scanned, setScanned] = useState<boolean>(false); // State to track if barcode was scanned
+  const [barcodeData, setBarcodeData] = useState<string | null>(null); // State to store barcode data
+
+  useEffect(() => {
+    const getCameraPermissions = async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+
+    getCameraPermissions();
+  }, []);
+
+  const handleBarcodeScanned = ({ type, data }: BarcodeData) => {
+    if (scanned) return; // Prevent rescanning after one scan
+    setScanned(true);
+    setBarcodeData(data); // Store barcode data
+    //alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  };
+
+  // Reset the scan state to allow another scan
+  const handleScanAgain = () => {
+    setScanned(false);
+    setBarcodeData(null);
+  };
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
   }
-
-  if (!permission.granted) {
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          We need your permission to use the camera
-        </Text>
-        <Button onPress={requestPermission} title="Grant permission" />
-      </View>
-    );
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
   }
-
-  const takePicture = async () => {
-    const photo = await ref.current?.takePictureAsync();
-    setUri(photo?.uri || null);
-  };
-
-  const recordVideo = async () => {
-    if (recording) {
-      setRecording(false);
-      ref.current?.stopRecording();
-      return;
-    }
-    setRecording(true);
-    const video = await ref.current?.recordAsync();
-    console.log({ video });
-  };
-
-  const toggleMode = () => {
-    setMode((prev) => (prev === "picture" ? "video" : "picture"));
-  };
-
-  const toggleFacing = () => {
-    setFacing((prev) => (prev === "back" ? "front" : "back"));
-  };
-
-  const renderPicture = () => {
-    return (
-      <View>
-        <Image
-          source={{ uri }}
-          contentFit="contain"
-          style={{ width: 300, aspectRatio: 1 }}
-        />
-        <Button onPress={() => setUri(null)} title="Take another picture" />
-      </View>
-    );
-  };
-
-  const renderCamera = () => {
-    return (
-      <CameraView
-        style={styles.camera}
-        ref={ref}
-        mode={mode}
-        facing={facing}
-        mute={false}
-        responsiveOrientationWhenOrientationLocked
-      >
-        <View style={styles.shutterContainer}>
-          <Pressable onPress={toggleMode}>
-            {mode === "picture" ? (
-              <AntDesign name="picture" size={32} color="white" />
-            ) : (
-              <Feather name="video" size={32} color="white" />
-            )}
-          </Pressable>
-          <Pressable onPress={mode === "picture" ? takePicture : recordVideo}>
-            {({ pressed }) => (
-              <View
-                style={[
-                  styles.shutterBtn,
-                  {
-                    opacity: pressed ? 0.5 : 1,
-                  },
-                ]}
-              >
-                <View
-                  style={[
-                    styles.shutterBtnInner,
-                    {
-                      backgroundColor: mode === "picture" ? "white" : "red",
-                    },
-                  ]}
-                />
-              </View>
-            )}
-          </Pressable>
-          <Pressable onPress={toggleFacing}>
-            <FontAwesome6 name="rotate-left" size={32} color="white" />
-          </Pressable>
-        </View>
-      </CameraView>
-    );
-  };
 
   return (
     <View style={styles.container}>
-      {uri ? renderPicture() : renderCamera()}
+      <CameraView
+        onBarcodeScanned={scanned ? undefined : handleBarcodeScanned} // Disable scanning if already scanned
+        barcodeScannerSettings={{
+          barcodeTypes: ["qr", "pdf417", "upc_a", "ean8", "ean13", "aztec"],
+        }}
+        style={styles.camera}
+      />
+      <View style={styles.overlay}>
+        {scanned && barcodeData ? (
+          <View style={styles.resultContainer}>
+            <Text style={styles.resultText}>Scanned Barcode: {barcodeData}</Text>
+            <TouchableOpacity onPress={handleScanAgain} style={styles.button}>
+              <Text style={styles.buttonText}>Tap to Scan Again</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <Text style={styles.instructions}>Scan a barcode to get started</Text>
+        )}
+      </View>
+      {scanned && (
+        <TouchableOpacity style={styles.floatingButton} onPress={handleScanAgain}>
+          <AntDesign name="reload1" size={40} color="white" />
+        </TouchableOpacity>
+      )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "black",
   },
   camera: {
     flex: 1,
     width: "100%",
+    borderRadius: 15,
+    overflow: "hidden",
   },
-  shutterContainer: {
+  overlay: {
     position: "absolute",
-    bottom: 44,
+    top: 50,
     left: 0,
-    width: "100%",
+    right: 0,
+    bottom: 50,
+    justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 30,
   },
-  shutterBtn: {
-    backgroundColor: "transparent",
-    borderWidth: 5,
-    borderColor: "white",
-    width: 85,
-    height: 85,
-    borderRadius: 45,
+  instructions: {
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  resultContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  resultText: {
+    color: "white",
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: "#4CAF50",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+  },
+  floatingButton: {
+    position: "absolute",
+    bottom: 40,
+    right: 40,
+    backgroundColor: "#FF6347",
+    padding: 20,
+    borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
   },
-  shutterBtnInner: {
-    width: 70,
-    height: 70,
-    borderRadius: 50,
-  },
 });
-
-export default App;
