@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Camera, CameraView } from "expo-camera";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 
 type BarcodeData = {
   type: string;
@@ -10,26 +10,23 @@ type BarcodeData = {
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [scanned, setScanned] = useState<boolean>(false); // State to track if barcode was scanned
-  const [barcodeData, setBarcodeData] = useState<string | null>(null); // State to store barcode data
+  const [scanned, setScanned] = useState<boolean>(false);
+  const [barcodeData, setBarcodeData] = useState<string | null>(null);
 
   useEffect(() => {
     const getCameraPermissions = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
     };
-
     getCameraPermissions();
   }, []);
 
   const handleBarcodeScanned = ({ type, data }: BarcodeData) => {
-    if (scanned) return; // Prevent rescanning after one scan
+    if (scanned) return;
     setScanned(true);
-    setBarcodeData(data); // Store barcode data
-    //alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    setBarcodeData(data);
   };
 
-  // Reset the scan state to allow another scan
   const handleScanAgain = () => {
     setScanned(false);
     setBarcodeData(null);
@@ -45,29 +42,33 @@ export default function App() {
   return (
     <View style={styles.container}>
       <CameraView
-        onBarcodeScanned={scanned ? undefined : handleBarcodeScanned} // Disable scanning if already scanned
-        barcodeScannerSettings={{
-          barcodeTypes: ["qr", "pdf417", "upc_a", "ean8", "ean13", "aztec"],
-        }}
+        onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+        barcodeScannerSettings={{ barcodeTypes: ["qr", "pdf417", "upc_a", "ean8", "ean13", "aztec"] }}
         style={styles.camera}
       />
       <View style={styles.overlay}>
-        {scanned && barcodeData ? (
-          <View style={styles.resultContainer}>
-            <Text style={styles.resultText}>Scanned Barcode: {barcodeData}</Text>
-            <TouchableOpacity onPress={handleScanAgain} style={styles.button}>
-              <Text style={styles.buttonText}>Tap to Scan Again</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <Text style={styles.instructions}>Scan a barcode to get started</Text>
-        )}
+        <View style={styles.scanFrame} />
+        <Text style={styles.scanText}>Scan Barcode for Analysis</Text>
       </View>
-      {scanned && (
-        <TouchableOpacity style={styles.floatingButton} onPress={handleScanAgain}>
-          <AntDesign name="reload1" size={40} color="white" />
-        </TouchableOpacity>
+      {scanned && barcodeData && (
+        <View style={styles.resultContainer}>
+          <Text style={styles.resultText}>Scanned Barcode: {barcodeData}</Text>
+          <TouchableOpacity onPress={handleScanAgain} style={styles.button}>
+            <Text style={styles.buttonText}>Tap to Scan Again</Text>
+          </TouchableOpacity>
+        </View>
       )}
+      <TouchableOpacity style={styles.scanButton} onPress={handleScanAgain}>
+        <View style={styles.scanInnerCircle} />
+      </TouchableOpacity>
+      <View style={styles.bottomButtons}>
+        <TouchableOpacity style={styles.iconButton}>
+          <FontAwesome name="image" size={30} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.iconButton}>
+          <AntDesign name="search1" size={30} color="white" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -75,41 +76,44 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "black",
+    justifyContent: "center",
   },
   camera: {
     flex: 1,
-    width: "100%",
-    borderRadius: 15,
-    overflow: "hidden",
   },
   overlay: {
     position: "absolute",
-    top: 50,
+    top: "30%",
     left: 0,
     right: 0,
-    bottom: 50,
-    justifyContent: "center",
     alignItems: "center",
   },
-  instructions: {
+  scanFrame: {
+    width: 250,
+    height: 150,
+    borderWidth: 3,
+    borderColor: "white",
+    borderRadius: 20,
+  },
+  scanText: {
     color: "white",
     fontSize: 18,
-    textAlign: "center",
-    marginBottom: 20,
+    marginTop: 10,
   },
   resultContainer: {
+    position: "absolute",
+    bottom: 180,
     backgroundColor: "rgba(0, 0, 0, 0.7)",
     padding: 20,
     borderRadius: 10,
     alignItems: "center",
+    alignSelf: "center",
   },
   resultText: {
     color: "white",
     fontSize: 18,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   button: {
     backgroundColor: "#4CAF50",
@@ -120,14 +124,35 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
   },
-  floatingButton: {
+  scanButton: {
+    position: "absolute",
+    bottom: 120,
+    alignSelf: "center",
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scanInnerCircle: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: "transparent",
+    borderWidth: 2,
+    borderColor: "gray",
+  },
+  bottomButtons: {
     position: "absolute",
     bottom: 40,
-    right: 40,
-    backgroundColor: "#FF6347",
-    padding: 20,
-    borderRadius: 50,
-    alignItems: "center",
-    justifyContent: "center",
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  iconButton: {
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    padding: 15,
+    borderRadius: 40,
   },
 });
