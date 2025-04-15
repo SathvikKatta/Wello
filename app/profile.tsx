@@ -1,21 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { useFonts, Manjari_400Regular } from '@expo-google-fonts/manjari';
+import { useFonts, Manjari_700Bold } from '@expo-google-fonts/manjari';
 import { Ionicons, Feather } from '@expo/vector-icons';
-//import avatar from 'app/Intersect.png';
 
-const avatarImage = require('../assets/images/Intersect.png');  
+const avatarImage = require('../assets/images/Intersect.png');
 
 export default function ProfileScreen() {
-  const [fontsLoaded] = useFonts({ Manjari_400Regular });
+  const [fontsLoaded] = useFonts({ Manjari_700Bold });
   if (!fontsLoaded) return null;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Image
-        source={avatarImage}  
-        style={styles.avatar}
-      />
+    <ScrollView contentContainerStyle={[styles.container, { flexGrow: 1 }]}>
+      <Image source={avatarImage} style={styles.avatar} />
 
       <View style={styles.iconRow}>
         <TouchableOpacity>
@@ -26,12 +22,12 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      <ProfileButton label="Edit Profile" icon={<Ionicons name="person-outline" size={20} />} color="#D0A17E" />
-      <ProfileButton label="Edit Medical History" icon={<Ionicons name="medical-outline" size={22} />} color="#FAD4D8" />
-      <ProfileButton label="Privacy & Security" icon={<Ionicons name="lock-closed" size={18} />} color="#B4CEB3" />
-      <ProfileButton label="Bookmarks" icon={<Ionicons name="bookmark-outline" size={20} />} color="#B3D5EB" />
-      <ProfileButton label="Billing & Payment" icon={<Ionicons name="card-outline" size={20} />} color="#F5C994" />
-      <ProfileButton label="Settings" icon={<Feather name="settings" size={20} />} color="#DaDaDa" />
+      <ProfileButton label="Edit Profile" icon={<Ionicons name="person-outline" size={20} />} color="#D0A17E" textColor="#FFFFFF" />
+      <ProfileButton label="Edit Medical History" icon={<Ionicons name="medical-outline" size={22} />} color="#FAD4D8" textColor="#912F40" />
+      <ProfileButton label="Privacy & Security" icon={<Ionicons name="lock-closed" size={18} />} color="#B4CEB3" textColor="#2C5E3A" />
+      <ProfileButton label="Bookmarks" icon={<Ionicons name="bookmark-outline" size={20} />} color="#9CCEDF" textColor="#1D4F6E" />
+      <ProfileButton label="Billing & Payment" icon={<Ionicons name="card-outline" size={20} />} color="#FDC48C" textColor="#6E3E10" />
+      <ProfileButton label="Settings" icon={<Feather name="settings" size={20} />} color="#DADADA" textColor="#333333" />
     </ScrollView>
   );
 }
@@ -40,18 +36,18 @@ type ProfileButtonProps = {
   label: string;
   icon: React.ReactNode;
   color: string;
+  textColor: string;
 };
 
-const ProfileButton = ({ label, icon, color }: ProfileButtonProps) => (
+const ProfileButton = ({ label, icon, color, textColor }: ProfileButtonProps) => (
   <TouchableOpacity style={[styles.button, { backgroundColor: color }]}>
-    <Text style={styles.buttonText}>{label}</Text>
+    <Text style={[{ color: textColor }, styles.buttonText]}>{label}</Text>
     <View>{icon}</View>
   </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     padding: 20,
     paddingTop: 40,
@@ -78,7 +74,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    fontFamily: 'Manjari_400Regular',
-    fontSize: 17,
+    fontSize: 20,
+    marginTop: 10,
+    fontFamily: 'Manjari_700Bold',
   },
 });
