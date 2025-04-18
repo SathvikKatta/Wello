@@ -38,6 +38,11 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "fonts": {
+    "Manjari_400Regular": "./assets/fonts/Manjari-Regular.ttf",
+    "Manjari_700Bold": "./assets/fonts/Manjari-Bold.ttf",
+    "PublicSans_700Bold": "./assets/fonts/PublicSans-Bold.ttf"
+  }
   }
 }

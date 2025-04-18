@@ -8,6 +8,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Button title="Go to Profile" onPress={() => router.push('/profile')} />
+      <Button title="Go to Today's Plate" onPress={() => router.push('/tplate')} />
     </View>
   );
 }
