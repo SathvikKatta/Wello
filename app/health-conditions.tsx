@@ -10,35 +10,44 @@ type ConditionType = {
 export default function HealthConditions() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const [age, setAge] = useState<string>('');
   const [dietaryRestrictions, setDietaryRestrictions] = useState<string[]>([]);
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
   const [healthConditions, setHealthConditions] = useState<string[]>([]);
-
+  const [paramsProcessed, setParamsProcessed] = useState(false);
+  
+  // Process all params only once at component mount
   useEffect(() => {
-    // Extract parameters
-    if (params.dietaryRestrictions) {
-      try {
-        const restrictionsParam = params.dietaryRestrictions as string;
-        const restrictions = JSON.parse(restrictionsParam);
-        setDietaryRestrictions(restrictions);
-      } catch (error) {
-        console.error('Error parsing dietary restrictions:', error);
+    if (!paramsProcessed) {
+      // Extract age parameter
+      if (params.age) {
+        setAge(params.age as string);
       }
+      
+      // Extract dietary restrictions if available
+      if (params.dietaryRestrictions) {
+        try {
+          const restrictionsParam = params.dietaryRestrictions as string;
+          const restrictions = JSON.parse(restrictionsParam);
+          setDietaryRestrictions(restrictions);
+        } catch (error) {
+          console.error('Error parsing dietary restrictions:', error);
+        }
+      }
+      
+      // Extract other parameters
+      if (params.weight) {
+        setWeight(params.weight as string);
+      }
+      
+      if (params.height) {
+        setHeight(params.height as string);
+      }
+      
+      setParamsProcessed(true);
     }
-  }, [params.dietaryRestrictions]);
-  
-  useEffect(() => {
-    if (params.weight) {
-      setWeight(params.weight as string);
-    }
-  }, [params.weight]);
-  
-  useEffect(() => {
-    if (params.height) {
-      setHeight(params.height as string);
-    }
-  }, [params.height]);
+  }, [params, paramsProcessed]);
 
   // Handler for health conditions selection
   const handleHealthConditionSelection = (condition: string) => {
@@ -51,7 +60,7 @@ export default function HealthConditions() {
     }
   };
 
-  // Navigate to the previous screen
+  // Navigate to the previous screen (age question)
   const handleBack = () => {
     router.back();
   };
@@ -60,6 +69,7 @@ export default function HealthConditions() {
   const handleSubmit = () => {
     // Collect all form data
     const formData = {
+      age,
       dietaryRestrictions,
       weight,
       height,
@@ -72,11 +82,14 @@ export default function HealthConditions() {
     Alert.alert(
       "Success",
       "Your health questionnaire has been submitted successfully!",
-      [{ text: "OK" }]
+      [{ 
+        text: "OK",
+        onPress: () => {
+          // Use type assertion to bypass TypeScript constraints
+          router.push('/home' as any);
+        }
+      }]
     );
-    
-    // Navigate back to the home screen or to a confirmation screen
-    // router.push('/confirmation');
   };
 
   const conditions: ConditionType[] = [
@@ -111,8 +124,6 @@ export default function HealthConditions() {
   return (
     <View style={styles.container}>
       <View style={styles.questionContainer}>
-        
-        
         <ScrollView style={styles.contentScrollContainer}>
           <View style={styles.contentContainer}>
             <Text style={styles.questionText}>

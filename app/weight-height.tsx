@@ -101,7 +101,7 @@ export default function WeightHeight() {
     }
     
     router.push({
-      pathname: '/health-conditions',
+      pathname: '/age-question',
       params: {
         dietaryRestrictions: JSON.stringify(dietaryRestrictions),
         weight: metricWeight,
