@@ -95,7 +95,6 @@ export default function TPlateScreen() {
           )}
         </View>
 
-        {/* Static food groups */}
         {renderCategory("Protein", "12g to go", "#9CCEDF", "#5F99C9", "80%", "#70B9D2", <MaterialCommunityIcons name="egg" size={20} color="white" />)}
         {renderCategory("Vegetables", "Great job!", "#B4CEB3", "#87A878", "100%", "#aedfa3", <MaterialCommunityIcons name="carrot" size={20} color="white" />)}
         {renderCategory("Fruits", "1/4 cup to go", "#FAD4D8", "#E3889D", "80%", "#F4B8C6", <MaterialCommunityIcons name="fruit-cherries" size={20} color="white" />)}
