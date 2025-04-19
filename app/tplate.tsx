@@ -29,13 +29,11 @@ export default function TPlateScreen() {
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Header layout */}
         <View style={styles.header}>
           <View style={styles.headerTopRow}>
             <Image source={avatarImage} style={styles.avatar} />
             <Feather name="menu" size={30} color="#A87C5F" style={styles.menuIcon} />
           </View>
-
           <View style={styles.headerBottomRow}>
             <Ionicons name="arrow-back" size={45} color="#A87C5F" />
             <Text style={styles.headerTitle}>Today’s Plate</Text>
@@ -44,40 +42,40 @@ export default function TPlateScreen() {
 
         {/* Calorie Summary */}
         <View style={styles.calorieBox}>
-          <View style={styles.calorieLeft}>
+          <View style={styles.calorieLeftAligned}>
             <Text style={styles.calorieNumber}>1030</Text>
             <Text style={styles.calorieLabel}>Calories</Text>
           </View>
-          <View style={styles.calorieGoalBox}>
+          <View style={styles.calorieGoalBoxRight}>
             <Text style={styles.calorieGoalLabel}>Until goal:</Text>
             <Text style={styles.calorieGoalValue}>800</Text>
           </View>
-        </View>
-        <View style={styles.calorieBarBackground}>
-          <View style={[styles.calorieBarFill, { width: '56%' }]} />
+          <View style={styles.calorieBarBackground}>
+            <View style={[styles.calorieBarFill, { width: '56%' }]} />
+          </View>
         </View>
 
         {/* Carbohydrates with Dropdown */}
-        <View style={[styles.card, { backgroundColor: "#FDC48C" }]}>
+        <View style={[styles.card, { backgroundColor: "#FDC48C" }]}>      
           <View style={styles.cardHeader}>
             <View style={styles.iconLabel}>
               <View style={styles.iconCircle}>
-                <MaterialCommunityIcons name="rice" size={20} color="white" />
+                <MaterialCommunityIcons name="rice" size={24} color="white" />
               </View>
               <Text style={styles.cardText}>Carbohydrates</Text>
             </View>
             <TouchableOpacity onPress={() => setCarbExpanded(!carbExpanded)}>
-              <Feather name={carbExpanded ? "chevron-up" : "chevron-down"} size={20} />
+              <Feather name={carbExpanded ? 'chevron-up' : 'chevron-down'} size={24} />
             </TouchableOpacity>
           </View>
-          <View style={[styles.progressBar, { backgroundColor: "#f8b06a" }]}>
-            <View style={[styles.progressFill, { backgroundColor: "#E47A00", width: '60%' }]}>
+          <View style={[styles.progressBar, { backgroundColor: "#f8b06a" }]}>        
+            <View style={[styles.progressFill, { backgroundColor: "#E47A00", width: '60%' }]}>          
               <Text style={styles.cardNote}>115g to go</Text>
             </View>
           </View>
 
           {carbExpanded && (
-            <View style={styles.foodList}>
+            <View style={styles.foodListInCardWithBG}>
               {foodImages.map((imgSrc, index) => (
                 <View key={index} style={styles.foodCard}>
                   <Image source={imgSrc} style={styles.foodImage} />
@@ -95,35 +93,27 @@ export default function TPlateScreen() {
           )}
         </View>
 
-        {renderCategory("Protein", "12g to go", "#9CCEDF", "#5F99C9", "80%", "#70B9D2", <MaterialCommunityIcons name="egg" size={20} color="white" />)}
-        {renderCategory("Vegetables", "Great job!", "#B4CEB3", "#87A878", "100%", "#aedfa3", <MaterialCommunityIcons name="carrot" size={20} color="white" />)}
-        {renderCategory("Fruits", "1/4 cup to go", "#FAD4D8", "#E3889D", "80%", "#F4B8C6", <MaterialCommunityIcons name="fruit-cherries" size={20} color="white" />)}
-        {renderCategory("Fats", "28g to go", "#FFE6B7", "#D7B351", "40%", "#E8D39B", <FontAwesome5 name="hamburger" size={20} color="white" />)}
+        {renderCategory("Protein", "12g to go", "#9CCEDF", "#5F99C9", "80%", "#70B9D2", <MaterialCommunityIcons name="egg" size={24} color="white" />)}
+        {renderCategory("Vegetables", "Great job!", "#B4CEB3", "#87A878", "100%", "#aedfa3", <MaterialCommunityIcons name="carrot" size={24} color="white" />)}
+        {renderCategory("Fruits", "1/4 cup to go", "#FAD4D8", "#E3889D", "80%", "#F4B8C6", <MaterialCommunityIcons name="fruit-cherries" size={24} color="white" />)}
+        {renderCategory("Fats", "28g to go", "#FFE6B7", "#D7B351", "40%", "#E8D39B", <FontAwesome5 name="hamburger" size={24} color="white" />)}
       </ScrollView>
     </View>
   );
 }
 
-function renderCategory(
-  label: string,
-  note: string,
-  cardColor: string,
-  fillColor: string,
-  fillPercent: string,
-  bgColor: string,
-  icon: React.ReactNode
-) {
+function renderCategory(label, note, cardColor, fillColor, fillPercent, bgColor, icon) {
   return (
-    <View style={[styles.card, { backgroundColor: cardColor }]}>
+    <View style={[styles.card, { backgroundColor: cardColor }]}>      
       <View style={styles.cardHeader}>
         <View style={styles.iconLabel}>
           <View style={styles.iconCircle}>{icon}</View>
           <Text style={styles.cardText}>{label}</Text>
         </View>
-        <Feather name="chevron-down" size={20} />
+        <Feather name="chevron-down" size={24} />
       </View>
-      <View style={[styles.progressBar, { backgroundColor: bgColor }]}>
-        <View style={[styles.progressFill, { backgroundColor: fillColor, width: fillPercent }]}>
+      <View style={[styles.progressBar, { backgroundColor: bgColor }]}>        
+        <View style={[styles.progressFill, { backgroundColor: fillColor, width: fillPercent }]}>          
           <Text style={styles.cardNote}>{note}</Text>
         </View>
       </View>
@@ -134,87 +124,40 @@ function renderCategory(
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#faeee8' },
   container: { padding: 20, paddingBottom: 60 },
-
-  // Updated header layout
-  header: {
-    marginBottom: 20,
-  },
-  headerTopRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-  },
-  menuIcon: {
-    padding: 4,
-  },
-  headerBottomRow: {
-    marginTop: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontFamily: 'Manjari_700Bold',
-    marginLeft: 12,
-    marginTop: 12,
-  },
-
-  // Calorie
+  header: { marginBottom: 20 },
+  headerTopRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  avatar: { width: 58, height: 58, borderRadius: 29 },
+  menuIcon: { padding: 4 },
+  headerBottomRow: { marginTop: 12, flexDirection: 'row', alignItems: 'center' },
+  headerTitle: { fontSize: 22, fontFamily: 'Manjari_700Bold', marginLeft: 12, marginTop: 12 },
   calorieBox: {
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: 10,
-    borderWidth: 1.5,
-    borderColor: 'white',
   },
-  calorieLeft: { alignItems: 'center' },
-  calorieNumber: {
-    fontSize: 48,
-    fontFamily: 'PublicSans_700Bold',
-  },
-  calorieLabel: {
-    fontSize: 16,
-    fontFamily: 'Manjari_400Regular',
-    marginTop: -4,
-  },
-  calorieGoalBox: { alignItems: 'flex-end' },
-  calorieGoalLabel: {
-    fontFamily: 'Manjari_400Regular',
-    fontSize: 18,
-  },
-  calorieGoalValue: {
-    fontFamily: 'PublicSans_700Bold',
-    fontSize: 24,
-    lineHeight: 28,
-  },
+  calorieLeftAligned: { alignItems: 'flex-start' },
+  calorieNumber: { fontSize: 48, fontFamily: 'PublicSans_700Bold', marginLeft: -6 },
+  calorieLabel: { fontSize: 16, fontFamily: 'Manjari_400Regular', marginTop: -4 },
+  calorieGoalBoxRight: { position: 'absolute', right: 20, top: 20, alignItems: 'flex-end' },
+  calorieGoalLabel: { fontFamily: 'PublicSans_700Bold', fontSize: 16 },
+  calorieGoalValue: { fontFamily: 'PublicSans_700Bold', fontSize: 22 },
   calorieBarBackground: {
-    height: 12,
+    height: 14,
     backgroundColor: '#e0d8ce',
-    borderRadius: 6,
-    marginBottom: 20,
+    borderRadius: 10,
+    marginTop: 20,
     overflow: 'hidden',
   },
   calorieBarFill: {
     height: '100%',
     backgroundColor: '#5b3d1f',
-    borderTopLeftRadius: 6,
-    borderBottomLeftRadius: 6,
+    borderRadius: 10,
   },
-
-  // Category cards
   card: {
     borderRadius: 25,
-    padding: 16,
-    marginTop: 16,
+    padding: 20,
+    marginTop: 18,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -226,22 +169,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconCircle: {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
     backgroundColor: 'rgba(0,0,0,0.2)',
-    borderRadius: 18,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: 12,
   },
   cardText: {
     fontFamily: 'Manjari_700Bold',
-    fontSize: 18,
+    fontSize: 20,
   },
   progressBar: {
-    height: 18,
+    height: 20,
     borderRadius: 20,
-    marginTop: 10,
+    marginTop: 12,
     overflow: 'hidden',
     justifyContent: 'center',
   },
@@ -250,17 +193,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'flex-end',
-    paddingRight: 10,
+    paddingRight: 12,
   },
   cardNote: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: 'Manjari_400Regular',
     color: 'white',
   },
-
-  foodList: {
+  foodListInCardWithBG: {
     marginTop: 14,
     gap: 14,
+    padding: 12,
+    backgroundColor: '#FDC48C',
+    borderRadius: 20,
   },
   foodCard: {
     backgroundColor: '#fff',
