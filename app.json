@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Foob",
-    "slug": "Foob",
+    "name": "wello",
+    "slug": "wello",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.foob"
+      "bundleIdentifier": "com.yourcompany.wello"
     },
     "android": {
       "adaptiveIcon": {
