@@ -18,7 +18,7 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# User Profile
+# Creating a User Profile
 user_profile = {
     'diet': 'veg',  # User preference (vegetarian, keto, etc.)
     'medications': ['medA'],  # Medications that interact with certain foods
@@ -27,7 +27,7 @@ user_profile = {
     'fat_goal': 30
 }
 
-# Rule-Based Filtering
+# Rule-Based Filtering - filters food dataset based on dietary restrictions and medicine interactions
 def filter_food(user, df):
     filtered = df[df['dietary_restrictions'] == user['diet']]
     filtered = filtered[filtered['med_interaction'] == 0]  # Remove risky foods
@@ -40,6 +40,8 @@ X = df[['protein', 'carbs', 'fat']]
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
+
+# Defines a Neutral Network
 def build_model():
     model = Sequential([
         Dense(32, activation='relu', input_shape=(3,)),
