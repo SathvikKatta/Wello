@@ -1,0 +1,1 @@
+import barcodeData from index.tsx
