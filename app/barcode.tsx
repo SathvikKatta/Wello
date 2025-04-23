@@ -21,6 +21,31 @@ export default function Barcode() {
     getCameraPermissions();
   }, []);
 
+  useEffect(() => {
+    if (barcodeData) {
+      fetch("https://wello-backend.onrender.com/main", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({input: barcodeData})
+      })
+      .then(response => response.json())
+      .then(data => {
+        /*
+          Data is the response from the API
+          set state with data and then do whatever
+          setNutritionInfo(data.nutrition_info)
+          gemini output is data.gemini_output
+        */
+        console.log("got the response: ", data)
+      })
+      .catch(error => {
+        console.log("error: ", error)
+      })
+    }
+  }, [barcodeData])
+
   const handleBarcodeScanned = ({ type, data }: BarcodeData) => {
     if (scanned) return;
     setScanned(true);
