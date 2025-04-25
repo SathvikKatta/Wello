@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import NavigationBar from '../components/NavigationBar';
 import { useRouter } from 'expo-router';
 
 // Interface for meal items
@@ -172,23 +173,8 @@ export default function GroceryListPlanner() {
       )}
 
       {/* Navigation Bar */}
-      <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
-          <View style={styles.navIcon} />
-        </TouchableOpacity>
-      </View>
+      <NavigationBar />
+
     </SafeAreaView>
   );
 }

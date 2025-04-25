@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 
-type ActivityLevel = '>30 mins daily' | '30-60 mins daily' | '>60 mins daily';
+type ActivityLevel = '<30 mins daily' | '30-60 mins daily' | '>60 mins daily';
 
 export default function PhysicalActivity() {
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function PhysicalActivity() {
       if (params.activity) {
         const activityParam = params.activity as string;
         if (
-          activityParam === '>30 mins daily' || 
+          activityParam === '<30 mins daily' || 
           activityParam === '30-60 mins daily' || 
           activityParam === '>60 mins daily'
         ) {
@@ -39,16 +39,11 @@ export default function PhysicalActivity() {
       
       setParamsProcessed(true);
     }
-  }, [params, paramsProcessed]);
+  }, [params.age, params.sex, params.activity, paramsProcessed]);
 
   // Handle activity option selection
   const handleActivitySelection = (activity: ActivityLevel) => {
     setSelectedActivity(activity);
-  };
-
-  // Navigate to the previous screen (biological sex)
-  const handleBack = () => {
-    router.back();
   };
 
   // Navigate to the next screen (health conditions)
@@ -81,13 +76,20 @@ export default function PhysicalActivity() {
               style={[
                 styles.optionButton, 
                 styles.lightGreenButton,
-                selectedActivity === '>30 mins daily' && styles.selectedOption
+                selectedActivity === '<30 mins daily' && styles.selectedOption
               ]} 
-              onPress={() => handleActivitySelection('>30 mins daily')}
+              onPress={() => handleActivitySelection('<30 mins daily')}
             >
               <View style={styles.optionInnerContainer}>
-                <Text style={styles.walkingIcon}>🚶</Text>
-                <Text style={styles.optionText}>{'>30 mins daily'}</Text>
+                <Image
+                  source={require('../assets/images/walk.png')}
+                  style={styles.activityIcon}
+                  resizeMode="contain"
+                />
+                <View style={styles.textContainer}>
+                  <Text style={styles.optionText}>{'<30 mins'}</Text>
+                  <Text style={styles.optionText}>daily</Text>
+                </View>
               </View>
             </TouchableOpacity>
             
@@ -100,8 +102,15 @@ export default function PhysicalActivity() {
               onPress={() => handleActivitySelection('30-60 mins daily')}
             >
               <View style={styles.optionInnerContainer}>
-                <Text style={styles.joggingIcon}>🏃</Text>
-                <Text style={styles.optionText}>{'30-60 mins daily'}</Text>
+                <Image
+                  source={require('../assets/images/jog.png')}
+                  style={styles.activityIcon}
+                  resizeMode="contain"
+                />
+                <View style={styles.textContainer}>
+                  <Text style={styles.optionText}>30-60</Text>
+                  <Text style={styles.optionText}>mins daily</Text>
+                </View>
               </View>
             </TouchableOpacity>
             
@@ -114,8 +123,15 @@ export default function PhysicalActivity() {
               onPress={() => handleActivitySelection('>60 mins daily')}
             >
               <View style={styles.optionInnerContainer}>
-                <Text style={styles.runningIcon}>🏃‍♂️</Text>
-                <Text style={styles.optionText}>{'>60 mins daily'}</Text>
+                <Image
+                  source={require('../assets/images/sprint.png')}
+                  style={styles.activityIcon}
+                  resizeMode="contain"
+                />
+                <View style={styles.textContainer}>
+                  <Text style={styles.optionText}>{'>60 mins'}</Text>
+                  <Text style={styles.optionText}>daily</Text>
+                </View>
               </View>
             </TouchableOpacity>
           </View>
@@ -123,21 +139,11 @@ export default function PhysicalActivity() {
         
         <View style={styles.navigationContainer}>
           <TouchableOpacity 
-            style={styles.backButton} 
-            onPress={handleBack}
-          >
-            <Text style={styles.buttonText}>Back</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[
-              styles.nextButton, 
-              !selectedActivity && styles.disabledButton
-            ]} 
+            style={styles.nextButton} 
             onPress={handleNext}
             disabled={!selectedActivity}
           >
-            <Text style={styles.buttonText}>Next</Text>
+            <Image source={require('../assets/images/circle.png')} style={styles.arrowIcon} />
           </TouchableOpacity>
         </View>
       </View>
@@ -153,6 +159,8 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     flex: 1,
+    paddingTop:90,
+
     backgroundColor: '#faf3e8',
     borderRadius: 10,
     padding: 15,
@@ -160,15 +168,17 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 20,
+    paddingTop: 40,
   },
   questionText: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 50,
     textAlign: 'center',
+    fontFamily: 'Manjari-Bold'
   },
   highlightGreen: {
     color: '#4caf50',
@@ -178,16 +188,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionButton: {
-    width: '80%',
-    padding: 15,
-    borderRadius: 30,
-    alignItems: 'center',
+    width: '90%',
+    height: 80,
+    borderRadius: 40,
     marginBottom: 20,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
   },
   optionInnerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   lightGreenButton: {
     backgroundColor: '#c8e6c9', // Light green
@@ -199,50 +211,43 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffcdd2', // Light pink
   },
   selectedOption: {
-    borderWidth: 3,
+    borderWidth: 2,
     borderColor: '#666',
   },
-  walkingIcon: {
-    fontSize: 22,
-    marginRight: 10,
+  activityIcon: {
+    width: 40,
+    height: 40,
+    marginRight: 0,
   },
-  joggingIcon: {
-    fontSize: 22,
-    marginRight: 10,
-  },
-  runningIcon: {
-    fontSize: 22,
-    marginRight: 10,
+  textContainer: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
   optionText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
+    textAlign: 'right',
+    fontFamily: 'Manjari-Bold',
   },
   navigationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  backButton: {
-    backgroundColor: '#9e9e9e',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    alignItems: 'center',
+    alignItems: 'flex-end', // Align to the right
+    justifyContent: 'flex-end', // Align to the bottom
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
   },
   nextButton: {
-    backgroundColor: '#d4a88e',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
+    backgroundColor: 'transparent',
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  disabledButton: {
-    backgroundColor: '#d4a88e80', // Add transparency to show it's disabled
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+  arrowIcon: {
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
   },
 });

@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Platform } from 'react-native';
 import { Feather, Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
-import {
-  useFonts,
-  Manjari_400Regular,
-  Manjari_700Bold,
-} from '@expo-google-fonts/manjari';
-import { PublicSans_700Bold } from '@expo-google-fonts/public-sans';
+import * as Font from 'expo-font';
 
 const avatarImage = require('../assets/images/Intersect.png');
 const foodImages = [
@@ -15,16 +10,39 @@ const foodImages = [
   require('../assets/images/image28.png'),
 ];
 
-export default function TPlateScreen() {
-  const [fontsLoaded] = useFonts({
-    Manjari_400Regular,
-    Manjari_700Bold,
-    PublicSans_700Bold,
+// Function to load the custom fonts
+const loadFonts = async () => {
+  await Font.loadAsync({
+    'Manjari-Bold': require('../assets/fonts/Manjari-Bold.ttf'),
+    'Manjari-Regular': require('../assets/fonts/Manjari-Regular.ttf'),
+    'PublicSans-Bold': require('../assets/fonts/PublicSans-Bold.ttf'),
   });
+};
 
+export default function TPlateScreen() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   const [carbExpanded, setCarbExpanded] = useState(false);
 
-  if (!fontsLoaded) return null;
+  // Load fonts when the component mounts
+  useEffect(() => {
+    const loadAndSetFonts = async () => {
+      await loadFonts();
+      setFontsLoaded(true);
+    };
+    
+    loadAndSetFonts();
+  }, []);
+
+  // Display a loading state while fonts are loading
+  if (!fontsLoaded) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto', fontSize: 20 }}>
+          Loading...
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
@@ -36,7 +54,7 @@ export default function TPlateScreen() {
           </View>
           <View style={styles.headerBottomRow}>
             <Ionicons name="arrow-back" size={45} color="#A87C5F" />
-            <Text style={styles.headerTitle}>Today’s Plate</Text>
+            <Text style={styles.headerTitle}>Today's Plate</Text>
           </View>
         </View>
 
@@ -93,16 +111,25 @@ export default function TPlateScreen() {
           )}
         </View>
 
-        {renderCategory("Protein", "12g to go", "#9CCEDF", "#5F99C9", "80%", "#70B9D2", <MaterialCommunityIcons name="egg" size={24} color="white" />)}
-        {renderCategory("Vegetables", "Great job!", "#B4CEB3", "#87A878", "100%", "#aedfa3", <MaterialCommunityIcons name="carrot" size={24} color="white" />)}
-        {renderCategory("Fruits", "1/4 cup to go", "#FAD4D8", "#E3889D", "80%", "#F4B8C6", <MaterialCommunityIcons name="fruit-cherries" size={24} color="white" />)}
-        {renderCategory("Fats", "28g to go", "#FFE6B7", "#D7B351", "40%", "#E8D39B", <FontAwesome5 name="hamburger" size={24} color="white" />)}
+        {renderCategory("Protein", "12g to go", "#9CCEDF", "#5F99C9", 80, "#70B9D2", <MaterialCommunityIcons name="egg" size={24} color="white" />)}
+        {renderCategory("Vegetables", "Great job!", "#B4CEB3", "#87A878", 100, "#aedfa3", <MaterialCommunityIcons name="carrot" size={24} color="white" />)}
+        {renderCategory("Fruits", "1/4 cup to go", "#FAD4D8", "#E3889D", 80, "#F4B8C6", <MaterialCommunityIcons name="fruit-cherries" size={24} color="white" />)}
+        {renderCategory("Fats", "28g to go", "#FFE6B7", "#D7B351", 40, "#E8D39B", <FontAwesome5 name="hamburger" size={24} color="white" />)}
       </ScrollView>
     </View>
   );
 }
 
-function renderCategory(label, note, cardColor, fillColor, fillPercent, bgColor, icon) {
+// Fixed the type for fillPercent to be a number
+function renderCategory(
+  label: string,
+  note: string,
+  cardColor: string,
+  fillColor: string,
+  fillPercent: number,
+  bgColor: string,
+  icon: React.ReactNode
+) {
   return (
     <View style={[styles.card, { backgroundColor: cardColor }]}>      
       <View style={styles.cardHeader}>
@@ -113,7 +140,7 @@ function renderCategory(label, note, cardColor, fillColor, fillPercent, bgColor,
         <Feather name="chevron-down" size={24} />
       </View>
       <View style={[styles.progressBar, { backgroundColor: bgColor }]}>        
-        <View style={[styles.progressFill, { backgroundColor: fillColor, width: fillPercent }]}>          
+        <View style={[styles.progressFill, { backgroundColor: fillColor, width: `${fillPercent}%` }]}>          
           <Text style={styles.cardNote}>{note}</Text>
         </View>
       </View>
@@ -129,7 +156,7 @@ const styles = StyleSheet.create({
   avatar: { width: 58, height: 58, borderRadius: 29 },
   menuIcon: { padding: 4 },
   headerBottomRow: { marginTop: 12, flexDirection: 'row', alignItems: 'center' },
-  headerTitle: { fontSize: 22, fontFamily: 'Manjari_700Bold', marginLeft: 12, marginTop: 12 },
+  headerTitle: { fontSize: 22, fontFamily: 'Manjari-Bold', marginLeft: 12, marginTop: 12 },
   calorieBox: {
     backgroundColor: 'white',
     borderRadius: 20,
@@ -137,11 +164,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   calorieLeftAligned: { alignItems: 'flex-start' },
-  calorieNumber: { fontSize: 48, fontFamily: 'PublicSans_700Bold', marginLeft: -6 },
-  calorieLabel: { fontSize: 16, fontFamily: 'Manjari_400Regular', marginTop: -4 },
+  calorieNumber: { fontSize: 48, fontFamily: 'PublicSans-Bold', marginLeft: -6 },
+  calorieLabel: { fontSize: 16, fontFamily: 'Manjari-Regular', marginTop: -4 },
   calorieGoalBoxRight: { position: 'absolute', right: 20, top: 20, alignItems: 'flex-end' },
-  calorieGoalLabel: { fontFamily: 'PublicSans_700Bold', fontSize: 16 },
-  calorieGoalValue: { fontFamily: 'PublicSans_700Bold', fontSize: 22 },
+  calorieGoalLabel: { fontFamily: 'PublicSans-Bold', fontSize: 16 },
+  calorieGoalValue: { fontFamily: 'PublicSans-Bold', fontSize: 22 },
   calorieBarBackground: {
     height: 14,
     backgroundColor: '#e0d8ce',
@@ -178,7 +205,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   cardText: {
-    fontFamily: 'Manjari_700Bold',
+    fontFamily: 'Manjari-Bold',
     fontSize: 20,
   },
   progressBar: {
@@ -197,7 +224,7 @@ const styles = StyleSheet.create({
   },
   cardNote: {
     fontSize: 15,
-    fontFamily: 'Manjari_400Regular',
+    fontFamily: 'Manjari-Regular',
     color: 'white',
   },
   foodListInCardWithBG: {
@@ -224,7 +251,7 @@ const styles = StyleSheet.create({
   },
   foodLabel: {
     flex: 1,
-    fontFamily: 'Manjari_400Regular',
+    fontFamily: 'Manjari-Regular',
     fontSize: 14,
   },
 });

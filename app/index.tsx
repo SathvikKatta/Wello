@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -61,9 +60,12 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.questionContainer}>
+    
+ 
+        
         <View style={styles.contentContainer}>
           <Text style={styles.questionText}>
-            Do you have any <Text style={styles.highlightGreen}>dietary restrictions</Text>?
+            Do you have any{'\n'}<Text style={styles.highlightGreen}>dietary restrictions</Text>?
           </Text>
           
           <TouchableOpacity
@@ -74,7 +76,7 @@ export default function Index() {
             ]}
             onPress={() => handleDietarySelection('Vegetarian')}
           >
-            <Text style={styles.optionText}>Vegetarian</Text>
+            <Text style={[styles.optionText, { color: '#6A0C38' }]}>Vegetarian</Text>
             <Image source={require('../assets/images/carrot.png')} style={styles.optionImage} />
           </TouchableOpacity>
           
@@ -86,7 +88,7 @@ export default function Index() {
             ]}
             onPress={() => handleDietarySelection('Vegan')}
           >
-            <Text style={styles.optionText}>Vegan</Text>
+            <Text style={[styles.optionText, { color: '#0C381E' }]}>Vegan</Text>
             <Image source={require('../assets/images/salad.png')} style={styles.optionImage} />
           </TouchableOpacity>
           
@@ -98,7 +100,7 @@ export default function Index() {
             ]}
             onPress={() => handleDietarySelection('Kosher')}
           >
-            <Text style={styles.optionText}>Kosher</Text>
+            <Text style={[styles.optionText, { color: '#054359' }]}>Kosher</Text>
             <Image source={require('../assets/images/star.png')} style={styles.optionImage} />
           </TouchableOpacity>
           
@@ -110,7 +112,7 @@ export default function Index() {
             ]}
             onPress={() => handleDietarySelection('Halal')}
           >
-            <Text style={styles.optionText}>Halal</Text>
+            <Text style={[styles.optionText, { color: '#55330D' }]}>Halal</Text>
             <Image source={require('../assets/images/moon.png')} style={styles.optionImage} />
           </TouchableOpacity>
           
@@ -123,6 +125,7 @@ export default function Index() {
             onPress={() => handleDietarySelection('Other')}
           >
             <Text style={styles.optionText}>Other</Text>
+            <Image source={require('../assets/images/otherButton.png')} style={styles.optionImage} />
           </TouchableOpacity>
         </View>
         
@@ -131,7 +134,7 @@ export default function Index() {
             style={styles.nextButton} 
             onPress={handleNext}
           >
-            <Text style={styles.buttonText}>Next</Text>
+            <Image source={require('../assets/images/circle.png')} style={styles.arrowIcon} />
           </TouchableOpacity>
         </View>
       </View>
@@ -141,6 +144,7 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 100, 
     flex: 1,
     backgroundColor: '#2e2e2e',
     padding: 10,
@@ -153,10 +157,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    marginTop: 10,
   },
   headerText: {
     fontSize: 18,
@@ -164,25 +168,14 @@ const styles = StyleSheet.create({
     color: '#888',
     fontFamily: 'Manjari-Bold',
   },
-  checkmarkCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#fad9c1',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkmark: {
-    color: '#fff',
-    fontSize: 14,
-    fontFamily: 'Manjari-Bold',
-  },
   contentContainer: {
+    marginTop:70,
     flex: 1,
     paddingHorizontal: 10,
+    alignItems: 'center', // Center the options horizontally
   },
   questionText: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 30,
     textAlign: 'center',
@@ -200,6 +193,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 25,
     marginBottom: 15,
+    width: '90%', // Constrains width to enable centering
   },
   pinkOption: {
     backgroundColor: '#ffcdd2',
@@ -231,24 +225,24 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   navigationContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-    paddingVertical: 10,
+    alignItems: 'flex-end', // Align to the right
+    justifyContent: 'flex-end', // Align to the bottom
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
   },
   nextButton: {
-    backgroundColor: '#4caf50',
-    paddingVertical: 12,
-    paddingHorizontal: 50,
-    borderRadius: 25,
+    backgroundColor: 'transparent', // Making it transparent since we're using an image
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
     alignItems: 'center',
-    width: 150,
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontFamily: 'Manjari-Bold',
+  arrowIcon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
   },
 });

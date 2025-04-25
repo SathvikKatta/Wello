@@ -1,13 +1,39 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { useFonts, Manjari_700Bold } from '@expo-google-fonts/manjari';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import * as Font from 'expo-font';
 import { Ionicons, Feather } from '@expo/vector-icons';
 
 const avatarImage = require('../assets/images/Intersect.png');
 
+const loadFonts = async () => {
+  await Font.loadAsync({
+    'Manjari-Bold': require('../assets/fonts/Manjari-Bold.ttf'),
+  });
+};
+
 export default function ProfileScreen() {
-  const [fontsLoaded] = useFonts({ Manjari_700Bold });
-  if (!fontsLoaded) return null;
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  
+  // Load fonts when the component mounts
+  useEffect(() => {
+    const loadAndSetFonts = async () => {
+      await loadFonts();
+      setFontsLoaded(true);
+    };
+    
+    loadAndSetFonts();
+  }, []);
+
+  // Display a loading state while fonts are loading
+  if (!fontsLoaded) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto', fontSize: 20 }}>
+          Loading...
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={[styles.container, { flexGrow: 1 }]}>
@@ -75,7 +101,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    marginTop: 10,
-    fontFamily: 'Manjari_700Bold',
+    fontFamily: 'Manjari-Bold', // Updated to use the loaded font
   },
 });

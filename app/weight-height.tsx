@@ -114,6 +114,7 @@ export default function WeightHeight() {
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
         <View style={styles.questionContainer}>
+  
           
           <View style={styles.contentContainer}>
             <Text style={styles.questionText}>
@@ -121,28 +122,30 @@ export default function WeightHeight() {
             </Text>
             
             <View style={styles.measurementContainer}>
-              {/* Human figure placeholder for PNG */}
+              {/* Human figure */}
               <View style={styles.humanIconContainer}>
-                {<Image 
-    source={require('../assets/images/humanIcon.png')} 
-    resizeMode="contain"
-  />}
-                <View style={styles.humanIconPlaceholder} />
+                <Image 
+                  source={require('../assets/images/humanIcon.png')} 
+                  style={styles.humanIcon}
+                  resizeMode="contain"
+                />
               </View>
               
               <View style={styles.inputsContainer}>
-                <Text style={styles.labelText}>Weight</Text>
-                <View style={styles.inputWithLabelsContainer}>
-                  <TextInput
-                    ref={weightInputRef}
-                    style={styles.inputField}
-                    value={weight}
-                    onChangeText={setWeight}
-                    keyboardType="numeric"
-                    placeholder=""
-                    returnKeyType="done"
-                    onSubmitEditing={dismissKeyboard}
-                  />
+                <View style={styles.inputGroup}>
+                  <View style={styles.inputWithLabel}>
+                    <Text style={styles.labelText}>Weight</Text>
+                    <TextInput
+                      ref={weightInputRef}
+                      style={styles.inputField}
+                      value={weight}
+                      onChangeText={setWeight}
+                      keyboardType="numeric"
+                      placeholder=""
+                      returnKeyType="done"
+                      onSubmitEditing={dismissKeyboard}
+                    />
+                  </View>
                   <View style={styles.unitLabelsContainer}>
                     <TouchableOpacity onPress={toggleWeightUnit} style={styles.unitToggle}>
                       <View style={[styles.unitOption, weightUnit === 'lbs' ? styles.activeUnitOption : styles.inactiveUnitOption]}>
@@ -155,18 +158,20 @@ export default function WeightHeight() {
                   </View>
                 </View>
                 
-                <Text style={styles.labelText}>Height</Text>
-                <View style={styles.inputWithLabelsContainer}>
-                  <TextInput
-                    ref={heightInputRef}
-                    style={styles.inputField}
-                    value={height}
-                    onChangeText={setHeight}
-                    keyboardType="numeric"
-                    placeholder=""
-                    returnKeyType="done"
-                    onSubmitEditing={dismissKeyboard}
-                  />
+                <View style={styles.inputGroup}>
+                  <View style={styles.inputWithLabel}>
+                    <Text style={styles.labelText}>Height</Text>
+                    <TextInput
+                      ref={heightInputRef}
+                      style={styles.inputField}
+                      value={height}
+                      onChangeText={setHeight}
+                      keyboardType="numeric"
+                      placeholder=""
+                      returnKeyType="done"
+                      onSubmitEditing={dismissKeyboard}
+                    />
+                  </View>
                   <View style={styles.unitLabelsContainer}>
                     <TouchableOpacity onPress={toggleHeightUnit} style={styles.unitToggle}>
                       <View style={[styles.unitOption, heightUnit === 'in' ? styles.activeUnitOption : styles.inactiveUnitOption]}>
@@ -184,16 +189,10 @@ export default function WeightHeight() {
           
           <View style={styles.navigationContainer}>
             <TouchableOpacity 
-              style={styles.backButton} 
-              onPress={handleBack}
-            >
-              <Text style={styles.buttonText}>Back</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
               style={styles.nextButton} 
               onPress={handleNext}
             >
-              <Text style={styles.buttonText}>Next</Text>
+              <Image source={require('../assets/images/circle.png')} style={styles.arrowIcon} />
             </TouchableOpacity>
           </View>
         </View>
@@ -216,85 +215,87 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
+    marginTop: 10,
   },
   headerText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#888',
   },
-  checkmarkCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#fad9c1',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkmark: {
-    color: '#fff',
-    fontSize: 14,
-  },
   contentContainer: {
     flex: 1,
     paddingHorizontal: 10,
+    paddingTop: 80, // Move content down more
+    alignItems: 'center', // Center all content
   },
   questionText: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 50, // More space below question
     textAlign: 'center',
+    fontFamily: 'Manjari-Bold'
   },
   highlightGreen: {
     color: '#4caf50',
   },
   measurementContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginTop: 20,
+    alignItems: 'center', // Center vertically
+    justifyContent: 'center', // Center horizontally
+    width: '90%',
+    marginTop: 40,
+    paddingBottom: 60, // Add space at the bottom
   },
   humanIconContainer: {
-    flex: 1,
+    flex: 0.8,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 20,
   },
-  humanIconPlaceholder: {
-    width: 80,
-    height: 200,
-    borderRadius: 40,
+  humanIcon: {
+    top:-26,
+    width: 100,
+    height: 220, // Make the human icon taller
   },
   inputsContainer: {
-    flex: 1.5,
-    justifyContent: 'flex-start',
-    paddingTop: 15,
+
+    flex: 1.2,
+    justifyContent: 'center',
+    paddingLeft: 10,
+  },
+  inputGroup: {
+    marginBottom: 25, // More space between input groups
+    width: '100%',
+  },
+  inputWithLabel: {
+    position: 'relative', // For absolute positioning of label
+    width: '100%',
   },
   labelText: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginTop: 15,
-    marginBottom: 5,
-  },
-  inputWithLabelsContainer: {
-    marginBottom: 20,
+    position: 'absolute', // Position label on top of the input field
+    left: 10,
+    top: -25, // Position label above input field
+    zIndex: 1, // Ensure label appears above input field
   },
   inputField: {
     backgroundColor: '#ffcdd2',
     borderRadius: 25,
     paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     fontSize: 16,
     width: '100%',
-    marginBottom: 3,
+    marginBottom: 8,
+    height: 50, // Taller input field
   },
   unitLabelsContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: 3,
+    marginBottom:25
   },
   unitToggle: {
     flexDirection: 'row',
@@ -309,40 +310,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   activeUnitOption: {
-    backgroundColor: '#d0b89c',
+    backgroundColor: '#d0b89c', // Brown color for active unit
   },
   inactiveUnitOption: {
-    backgroundColor: '#e3e3e3',
+    backgroundColor: '#e0e0e0', // Light gray for inactive unit
   },
   unitText: {
     fontSize: 14,
+    fontWeight: 'bold',
     color: '#000',
   },
   navigationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 15,
+    alignItems: 'flex-end', // Align to the right
+    justifyContent: 'flex-end', // Align to the bottom
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
   },
   nextButton: {
-    backgroundColor: '#4caf50',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
+    backgroundColor: 'transparent',
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
     alignItems: 'center',
-    width: 150,
   },
-  backButton: {
-    backgroundColor: '#9e9e9e',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    alignItems: 'center',
-    width: 150,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  arrowIcon: {
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
   },
 });
