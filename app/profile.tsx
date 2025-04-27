@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import * as Font from 'expo-font';
 import { Ionicons, Feather } from '@expo/vector-icons';
+import NavigationBar from '../components/NavigationBar';
 
 const avatarImage = require('../assets/images/Intersect.png');
 
@@ -36,25 +37,30 @@ export default function ProfileScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={[styles.container, { flexGrow: 1 }]}>
-      <Image source={avatarImage} style={styles.avatar} />
+    <View style={{ flex: 1, backgroundColor: '#FFF4EC' }}>
+      <ScrollView contentContainerStyle={[styles.container, { flexGrow: 1, paddingBottom: 90 }]}>
+        <Image source={avatarImage} style={styles.avatar} />
 
-      <View style={styles.iconRow}>
-        <TouchableOpacity>
-          <Ionicons name="camera-outline" size={30} />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="image-outline" size={30} />
-        </TouchableOpacity>
-      </View>
+        <View style={styles.iconRow}>
+          <TouchableOpacity>
+            <Ionicons name="camera-outline" size={30} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Ionicons name="image-outline" size={30} />
+          </TouchableOpacity>
+        </View>
 
-      <ProfileButton label="Edit Profile" icon={<Ionicons name="person-outline" size={20} />} color="#D0A17E" textColor="#FFFFFF" />
-      <ProfileButton label="Edit Medical History" icon={<Ionicons name="medical-outline" size={22} />} color="#FAD4D8" textColor="#912F40" />
-      <ProfileButton label="Privacy & Security" icon={<Ionicons name="lock-closed" size={18} />} color="#B4CEB3" textColor="#2C5E3A" />
-      <ProfileButton label="Bookmarks" icon={<Ionicons name="bookmark-outline" size={20} />} color="#9CCEDF" textColor="#1D4F6E" />
-      <ProfileButton label="Billing & Payment" icon={<Ionicons name="card-outline" size={20} />} color="#FDC48C" textColor="#6E3E10" />
-      <ProfileButton label="Settings" icon={<Feather name="settings" size={20} />} color="#DADADA" textColor="#333333" />
-    </ScrollView>
+        <ProfileButton label="Edit Profile" icon={<Ionicons name="person-outline" size={20} />} color="#D0A17E" textColor="#FFFFFF" />
+        <ProfileButton label="Edit Medical History" icon={<Ionicons name="medical-outline" size={22} />} color="#FAD4D8" textColor="#912F40" />
+        <ProfileButton label="Privacy & Security" icon={<Ionicons name="lock-closed" size={18} />} color="#B4CEB3" textColor="#2C5E3A" />
+        <ProfileButton label="Bookmarks" icon={<Ionicons name="bookmark-outline" size={20} />} color="#9CCEDF" textColor="#1D4F6E" />
+        <ProfileButton label="Billing & Payment" icon={<Ionicons name="card-outline" size={20} />} color="#FDC48C" textColor="#6E3E10" />
+        <ProfileButton label="Settings" icon={<Feather name="settings" size={20} />} color="#DADADA" textColor="#333333" />
+      </ScrollView>
+      
+      {/* Add the NavigationBar component */}
+      <NavigationBar />
+    </View>
   );
 }
 
@@ -101,6 +107,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    fontFamily: 'Manjari-Bold', // Updated to use the loaded font
+    fontFamily: 'Manjari-Bold',
   },
 });

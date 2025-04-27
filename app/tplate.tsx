@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Platform } from 'react-native';
 import { Feather, Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import * as Font from 'expo-font';
+import NavigationBar from '../components/NavigationBar';
 
 const avatarImage = require('../assets/images/Intersect.png');
 const foodImages = [
@@ -115,7 +116,13 @@ export default function TPlateScreen() {
         {renderCategory("Vegetables", "Great job!", "#B4CEB3", "#87A878", 100, "#aedfa3", <MaterialCommunityIcons name="carrot" size={24} color="white" />)}
         {renderCategory("Fruits", "1/4 cup to go", "#FAD4D8", "#E3889D", 80, "#F4B8C6", <MaterialCommunityIcons name="fruit-cherries" size={24} color="white" />)}
         {renderCategory("Fats", "28g to go", "#FFE6B7", "#D7B351", 40, "#E8D39B", <FontAwesome5 name="hamburger" size={24} color="white" />)}
+        
+        {/* Add extra padding at the bottom to ensure content isn't hidden behind the navbar */}
+        <View style={styles.navbarSpacer} />
       </ScrollView>
+      
+      {/* Add the NavigationBar component */}
+      <NavigationBar />
     </View>
   );
 }
@@ -253,5 +260,9 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'Manjari-Regular',
     fontSize: 14,
+  },
+  // Add extra space at the bottom to prevent content from being hidden behind the navbar
+  navbarSpacer: {
+    height: 80,
   },
 });

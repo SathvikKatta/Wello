@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { useRouter, usePathname } from 'expo-router';
 
 const NavigationBar: React.FC = () => {
-  const router = useRouter(); // Make sure to define router here
+  const router = useRouter();
   const pathname = usePathname();
 
   const isActive = (path: string): boolean => {
@@ -12,39 +12,59 @@ const NavigationBar: React.FC = () => {
 
   return (
     <View style={styles.navContainer}>
-      <TouchableOpacity 
-        style={[styles.navItem, isActive('/home') && styles.activeNavItem]} 
+      <TouchableOpacity
+        style={[styles.navItem, isActive('/home') && styles.activeNavItem]}
         onPress={() => router.push('/home' as any)}
       >
-        <View style={styles.navIcon} /> {/* Make sure navIcon is defined in styles */}
+        <Image 
+          source={require('../assets/images/homeWhite.png')} 
+          style={styles.navIcon}
+          resizeMode="contain"
+        />
       </TouchableOpacity>
       
-      <TouchableOpacity 
-        style={[styles.navItem, isActive('/meal-planner') && styles.activeNavItem]} 
-        onPress={() => router.push('/meal-planner' as any)}
+      <TouchableOpacity
+        style={[styles.navItem, isActive('/tplate') && styles.activeNavItem]}
+        onPress={() => router.push('/tplate' as any)}
       >
-        <View style={styles.navIcon} />
+        <Image 
+          source={require('../assets/images/forkWhite.png')} 
+          style={styles.navIcon}
+          resizeMode="contain"
+        />
       </TouchableOpacity>
       
-      <TouchableOpacity 
-        style={[styles.navItem, isActive('/profile') && styles.activeNavItem]} 
+      <TouchableOpacity
+        style={[styles.navItem, isActive('/profile') && styles.activeNavItem]}
         onPress={() => router.push('/profile' as any)}
       >
-        <View style={styles.navIcon} />
+        <Image 
+          source={require('../assets/images/profileWhite.png')} 
+          style={styles.navIcon}
+          resizeMode="contain"
+        />
       </TouchableOpacity>
       
-      <TouchableOpacity 
-        style={[styles.navItem, isActive('/calendar') && styles.activeNavItem]} 
-        onPress={() => router.push('/calendar' as any)}
+      <TouchableOpacity
+        style={[styles.navItem, isActive('/barcode') && styles.activeNavItem]}
+        onPress={() => router.push('/barcode' as any)}
       >
-        <View style={styles.navIcon} />
+        <Image 
+          source={require('../assets/images/barcodeWhite.png')} 
+          style={styles.navIcon}
+          resizeMode="contain"
+        />
       </TouchableOpacity>
       
-      <TouchableOpacity 
-        style={[styles.navItem, isActive('/cart') && styles.activeNavItem]} 
+      <TouchableOpacity
+        style={[styles.navItem, isActive('/cart') && styles.activeNavItem]}
         onPress={() => router.push('/cart' as any)}
       >
-        <View style={styles.navIcon} />
+        <Image 
+          source={require('../assets/images/cartWhite.png')} 
+          style={styles.navIcon}
+          resizeMode="contain"
+        />
       </TouchableOpacity>
     </View>
   );
@@ -55,9 +75,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderTopWidth: 1,
-    borderTopColor: '#ebebeb',
+    backgroundColor: '#c8a286', // Brown color from your reference image
     paddingVertical: 10,
     position: 'absolute',
     bottom: 0,
@@ -77,14 +95,11 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   activeNavItem: {
-    borderTopWidth: 3,
-    borderTopColor: '#c8a286',
+    // Optional: You might want to adjust how active items are styled
   },
   navIcon: {
     width: 24,
     height: 24,
-    backgroundColor: '#c8a286',
-    borderRadius: 12,
   }
 });
 

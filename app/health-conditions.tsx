@@ -106,7 +106,7 @@ export default function HealthConditions() {
     { name: 'Nut allergy', style: styles.orangeChip },
     { name: 'Dementia', style: styles.orangeChip },
     { name: 'Anorexia', style: styles.orangeChip },
-    { name: 'Alzheimer\'s', style: styles.pinkChip },
+    { name: 'Eczema', style: styles.pinkChip },
     { name: 'Acne', style: styles.pinkChip },
     { name: 'Bulimia', style: styles.pinkChip },
   ];
