@@ -1,15 +1,16 @@
 import requests
 import google.generativeai as genai
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
 # === CONFIGURATION ===
+GEMINI_API_KEY = "AIzaSyBdc2_cVuSgGXyoTbVNPnrOcY4ooeZAG1c"
 UPC_API_URL = "https://api.upcitemdb.com/prod/trial/lookup"
 USDA_API_KEY = "GhkIxCiYKlUO2usa4lfiepZ7EFW1imkDNTxaO1Xv"
-GEMINI_API_KEY = "AIzaSyBdc2_cVuSgGXyoTbVNPnrOcY4ooeZAG1c"
+
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel(model_name="models/gemini-1.5-pro-latest")
 
@@ -92,19 +93,20 @@ def get_medicine_info(brand_name):
     if "results"  not in data:
         return None
 
+
 def analyze_with_gemini(info_text, is_food=True):
     if is_food:
         prompt = ( 
             f"Given the following product and its nutritional information, "
             f"list 3 pros and 3 cons of eating it. Also give a short summary phrase. The pros should be formatted like **Pros of [product_name]**, and then list the pros. The cons should be formatted like **Cons of [product_name]**, and then list the cons \n{info_text}" 
             )
-        rating = f"Given the following product and its nutrition infomation. Write a short phase like, 'Looks Good', 'Be Cautious', etc. and rate it out of 5:\n{info_text}"
+        rating = f"Given the following product and its nutrition infomation. Write a short phase like, 'Looks Good', 'Be Cautious', etc. and rate it out of 5: Output the number first.\n{info_text}"
     else:
         prompt = (
             f"Based on this medicine label, give a short summary, mention which foods or drugs "
             f"should not be taken with it, and also provide a short phrase (like 'Safe', 'Use with caution') The pros should be formatted like **Pros of [product_name]**, and then list the pros. The cons should be formatted like **Cons of [product_name]**, and then list the cons and list thing you shouldn't take with the medicine\n{info_text}"
         )
-        rating = f"Given the following medicine and its nutrition infomation. Write a short phase like, 'like Safe', 'Use with caution', etc. and rate it out of 5:\n{info_text}"
+        rating = f"Given the following medicine and its nutrition infomation. Write a short phase like, 'like Safe', 'Use with caution', etc. and rate it out of 5: Output the number first.\n{info_text}"
 
 
     response = model.generate_content(prompt)
@@ -112,9 +114,11 @@ def analyze_with_gemini(info_text, is_food=True):
     return response.text.strip(), rating.text.strip()
 
 
+
 @app.route('/main', methods=['POST'])
-def main(upc_code):
-    print(f"Looking up UPC: {upc_code}")
+def main_method():
+    upc_code = request.json.get('input')
+    print(f"🔎 Looking up UPC: {upc_code}")
     title = get_product_title_from_upc(upc_code)
     if not title:
         print("Product not found for this UPC.")
@@ -126,9 +130,8 @@ def main(upc_code):
     if nutrition_info:
         print("Nutrition Info Found:\n", nutrition_info, "\n")
         analysis, rating = analyze_with_gemini(nutrition_info, is_food=True)
-
     else:
-        print("⚠️ Nutrition info not found. Checking medicine database...\n")
+        print("Nutrition info not found. Checking medicine database...\n")
         medicine_info = get_medicine_info(title)
         if not medicine_info:
             print("No medicine info found either.")
@@ -136,13 +139,16 @@ def main(upc_code):
         print("Medicine Info Found:\n", medicine_info, "\n")
         analysis, rating = analyze_with_gemini(nutrition_info, is_food=True)
 
+    print("\nAnalysis:\n")
+    return jsonify({"product_title": title,
+                    "nutrition_info": nutrition_info,
+                    "analysis": analysis,
+                    "rating": rating})
 
-    print("Gemini Analysis:")
-    print(analysis)
-    print("\nRating and Summary:")
-    print(rating)
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 
 # === RUN ===
-main("016000141544")  # Replace with any UPC code
+# main("016000141544")  # Replace with any UPC code
