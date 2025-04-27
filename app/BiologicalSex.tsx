@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 
 type SexOption = 'Male' | 'Female' | 'Intersex';
@@ -36,16 +36,11 @@ export default function BiologicalSex() {
     setSelectedSex(sex);
   };
 
-  // Navigate to the previous screen (age question)
-  const handleBack = () => {
-    router.back();
-  };
-
   // Navigate to the next screen (health conditions)
   const handleNext = () => {
     if (selectedSex) {
       router.push({
-        pathname: "/PhysicalActivity", // Try without the leading slash
+        pathname: "/PhysicalActivity",
         params: {
           age: age,
           sex: selectedSex
@@ -54,7 +49,6 @@ export default function BiologicalSex() {
     }
   };
   
-
   return (
     <View style={styles.container}>
       <View style={styles.questionContainer}>
@@ -72,7 +66,7 @@ export default function BiologicalSex() {
               ]} 
               onPress={() => handleSexSelection('Male')}
             >
-              <Text style={styles.optionText}>Male</Text>
+              <Text style={[styles.optionText, styles.maleText]}>Male</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
@@ -83,7 +77,7 @@ export default function BiologicalSex() {
               ]} 
               onPress={() => handleSexSelection('Female')}
             >
-              <Text style={styles.optionText}>Female</Text>
+              <Text style={[styles.optionText, styles.femaleText]}>Female</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
@@ -94,28 +88,21 @@ export default function BiologicalSex() {
               ]} 
               onPress={() => handleSexSelection('Intersex')}
             >
-              <Text style={styles.optionText}>Intersex</Text>
+              <Text style={[styles.optionText, styles.intersexText]}>Intersex</Text>
             </TouchableOpacity>
           </View>
         </View>
         
         <View style={styles.navigationContainer}>
           <TouchableOpacity 
-            style={styles.backButton} 
-            onPress={handleBack}
-          >
-            <Text style={styles.buttonText}>Back</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[
-              styles.nextButton, 
-              !selectedSex && styles.disabledButton
-            ]} 
+            style={styles.nextButton} 
             onPress={handleNext}
             disabled={!selectedSex}
           >
-            <Text style={styles.buttonText}>Next</Text>
+            <Image 
+              source={require('../assets/images/circle.png')} 
+              style={styles.arrowIcon} 
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -143,7 +130,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   questionText: {
-    fontSize: 24,
+    fontFamily: 'Manjari-Bold',
+    fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 50,
     textAlign: 'center',
@@ -156,10 +144,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionButton: {
-    width: '80%',
+    width: '60%', // Less wide
     padding: 20,
     borderRadius: 30,
-    alignItems: 'center',
+    alignItems: 'center', // Center the text
+    justifyContent: 'center', // Center the text vertically
     marginBottom: 20,
   },
   maleButton: {
@@ -176,34 +165,40 @@ const styles = StyleSheet.create({
     borderColor: '#666',
   },
   optionText: {
-    fontSize: 22,
+    marginTop:10,
+    fontSize: 36,
+    fontFamily: 'Manjari-Bold',
     fontWeight: 'bold',
+    textAlign: 'center', // Ensure text is centered
+  },
+  maleText: {
+    color: '#0C381E', // Dark green color
+  },
+  femaleText: {
+    color: '#054359', // Deep blue color
+  },
+  intersexText: {
+    color: '#6A0C38', // Burgundy color
   },
   navigationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  backButton: {
-    backgroundColor: '#9e9e9e',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    alignItems: 'center',
+    alignItems: 'flex-end', // Align to the right
+    justifyContent: 'flex-end', // Align to the bottom
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
   },
   nextButton: {
-    backgroundColor: '#d4a88e',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
+    backgroundColor: 'transparent',
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  disabledButton: {
-    backgroundColor: '#d4a88e80', // Add transparency to show it's disabled
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+  arrowIcon: {
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
   },
 });

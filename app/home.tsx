@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 // Import the NavigationBar component
 import NavigationBar from '../components/NavigationBar';
 
@@ -54,12 +54,22 @@ export default function Home() {
         <View style={styles.plateSection}>
           <Text style={styles.sectionTitle}>Today's Plate</Text>
           <View style={styles.plateContainer}>
-            <View style={styles.plateImage} />
+            {/* Replace the placeholder view with the plate image */}
+            <Image 
+              source={require('../assets/images/plate.png')} 
+              style={styles.plateImage}
+              resizeMode="contain"
+            />
             <TouchableOpacity 
               style={styles.medicineButton}
               onPress={() => navigateToScreen('/medicine')}
             >
-              <View style={styles.medicineIcon} />
+              {/* Replace the placeholder view with the medicine button image */}
+              <Image 
+                source={require('../assets/images/medicineButton.png')} 
+                style={styles.medicineIcon}
+                resizeMode="contain"
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -75,7 +85,35 @@ export default function Home() {
           >
             {recommendations.map((item) => (
               <TouchableOpacity key={item.id} style={styles.recommendationCard}>
-                <View style={styles.recommendationImage} />
+                {/* Use the appropriate image for each recommendation */}
+                {item.id === '1' && (
+                  <Image 
+                    source={require('../assets/images/cheerios.png')} 
+                    style={styles.recommendationImage}
+                    resizeMode="contain"
+                  />
+                )}
+                {item.id === '2' && (
+                  <Image 
+                    source={require('../assets/images/bread.png')} 
+                    style={styles.recommendationImage}
+                    resizeMode="contain"
+                  />
+                )}
+                {item.id === '3' && (
+                  <Image 
+                    source={require('../assets/images/yogurt.png')} 
+                    style={styles.recommendationImage}
+                    resizeMode="contain"
+                  />
+                )}
+                {item.id === '4' && (
+                  <Image 
+                    source={require('../assets/images/salmon.webp')} 
+                    style={styles.recommendationImage}
+                    resizeMode="contain"
+                  />
+                )}
                 <View style={styles.recommendationContent}>
                   <Text style={styles.recommendationTitle}>{item.name}</Text>
                   <Text style={styles.recommendationDescription}>{item.description}</Text>
@@ -98,7 +136,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFF4EC',
   },
   header: {
     flexDirection: 'row',
@@ -130,6 +168,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 15,
     marginBottom: 20,
+    fontFamily: 'Manjari-Bold',
   },
   contentScroll: {
     flex: 1,
@@ -146,6 +185,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 20,
     marginBottom: 15,
+    fontFamily: 'Manjari-Bold',
   },
   plateContainer: {
     position: 'relative',
@@ -159,7 +199,6 @@ const styles = StyleSheet.create({
     width: 230,
     height: 230,
     borderRadius: 115,
-    backgroundColor: '#ffffff',
   },
   medicineButton: {
     position: 'absolute',
@@ -177,8 +216,6 @@ const styles = StyleSheet.create({
   medicineIcon: {
     width: 24,
     height: 24,
-    borderRadius: 12,
-    backgroundColor: '#c8a286',
   },
   recommendationsSection: {
     paddingHorizontal: 20,
@@ -190,28 +227,40 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   recommendationCard: {
-    backgroundColor: '#f2e4d8',
+    backgroundColor: '#ffffff',
     borderRadius: 15,
-    width: 200,
+    width: 300,
     marginRight: 15,
+    flexDirection: 'row',
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   recommendationImage: {
-    width: '100%',
-    height: 120,
-    backgroundColor: '#ffffff',
+    width: 110,
+    height: 130,
+    margin: 10,
   },
   recommendationContent: {
-    padding: 10,
+    flex: 1,
+    padding: 15,
+    justifyContent: 'center',
   },
   recommendationTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     marginBottom: 5,
+    color: '#000000',
+    fontFamily: 'Manjari-Bold',
   },
   recommendationDescription: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 14,
+    color: '#333333',
+    lineHeight: 20,
+    fontFamily: 'Manjari-Bold',
   },
   spacer: {
     height: 90, // Ensures content isn't hidden behind the navigation bar

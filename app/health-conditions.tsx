@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 
 type ConditionType = {
@@ -47,7 +47,7 @@ export default function HealthConditions() {
       
       setParamsProcessed(true);
     }
-  }, [params, paramsProcessed]);
+  }, [params.age, params.dietaryRestrictions, params.weight, params.height, paramsProcessed]);
 
   // Handler for health conditions selection
   const handleHealthConditionSelection = (condition: string) => {
@@ -60,13 +60,8 @@ export default function HealthConditions() {
     }
   };
 
-  // Navigate to the previous screen (age question)
-  const handleBack = () => {
-    router.back();
-  };
-
-  // Submit the form
-  const handleSubmit = () => {
+  // Navigate to the Perfect completion screen
+  const handleNext = () => {
     // Collect all form data
     const formData = {
       age,
@@ -76,20 +71,15 @@ export default function HealthConditions() {
       healthConditions
     };
     
-    console.log('Form submitted:', formData);
+    console.log('Form data collected:', formData);
     
-    // Show success message
-    Alert.alert(
-      "Success",
-      "Your health questionnaire has been submitted successfully!",
-      [{ 
-        text: "OK",
-        onPress: () => {
-          // Use type assertion to bypass TypeScript constraints
-          router.push('/home' as any);
-        }
-      }]
-    );
+    // Navigate to the Perfect completion screen
+    router.push({
+      pathname: '/PerfectScreen',
+      params: {
+        formData: JSON.stringify(formData)
+      }
+    });
   };
 
   const conditions: ConditionType[] = [
@@ -116,7 +106,7 @@ export default function HealthConditions() {
     { name: 'Nut allergy', style: styles.orangeChip },
     { name: 'Dementia', style: styles.orangeChip },
     { name: 'Anorexia', style: styles.orangeChip },
-    { name: 'Alzheimer\'s', style: styles.pinkChip },
+    { name: 'Eczema', style: styles.pinkChip },
     { name: 'Acne', style: styles.pinkChip },
     { name: 'Bulimia', style: styles.pinkChip },
   ];
@@ -141,29 +131,34 @@ export default function HealthConditions() {
                   ]}
                   onPress={() => handleHealthConditionSelection(condition.name)}
                 >
-                  <Text style={styles.chipText}>{condition.name}</Text>
+                  <Text style={[
+                    styles.chipText, 
+                    condition.style === styles.pinkChip ? styles.pinkText : 
+                    condition.style === styles.greenChip ? styles.greenText :
+                    condition.style === styles.blueChip ? styles.blueText :
+                    condition.style === styles.orangeChip ? styles.orangeText : null
+                  ]}>
+                    {condition.name}
+                  </Text>
                 </TouchableOpacity>
               ))}
-              
-              <TouchableOpacity style={styles.otherChip}>
-                <Text style={styles.otherChipText}>Other (Please Specify)</Text>
-              </TouchableOpacity>
             </View>
+            
+            <TouchableOpacity style={styles.otherButton}>
+              <Text style={styles.otherButtonText}>Other (Please Specify)</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
         
         <View style={styles.navigationContainer}>
           <TouchableOpacity 
-            style={styles.backButton} 
-            onPress={handleBack}
+            style={styles.nextButton} 
+            onPress={handleNext}
           >
-            <Text style={styles.buttonText}>Back</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.submitButton} 
-            onPress={handleSubmit}
-          >
-            <Text style={styles.buttonText}>Submit</Text>
+            <Image 
+              source={require('../assets/images/circle.png')} 
+              style={styles.arrowIcon} 
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -178,38 +173,19 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   questionContainer: {
+    marginTop:40,
+
     flex: 1,
     backgroundColor: '#faf3e8',
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,
   },
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#888',
-  },
-  checkmarkCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#fad9c1',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkmark: {
-    color: '#fff',
-    fontSize: 14,
-  },
   contentContainer: {
+    marginTop:40,
     paddingHorizontal: 10,
-    paddingBottom: 20,
+    paddingTop: 20,
+    paddingBottom: 100, // Add space at the bottom for scrolling
   },
   contentScrollContainer: {
     flex: 1,
@@ -217,8 +193,9 @@ const styles = StyleSheet.create({
   questionText: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 20,
     textAlign: 'center',
+    fontFamily: 'Manjari-Bold',
   },
   highlightGreen: {
     color: '#4caf50',
@@ -227,12 +204,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+    marginTop: 20,
   },
   chip: {
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 15,
-    borderRadius: 20,
-    margin: 5,
+    borderRadius: 25,
+    margin: 4,
   },
   selectedChip: {
     borderWidth: 2,
@@ -252,40 +230,56 @@ const styles = StyleSheet.create({
   },
   chipText: {
     fontSize: 14,
+    fontWeight: 'bold',
+    fontFamily: 'Manjari-Bold',
   },
-  otherChip: {
-    backgroundColor: '#d7ccc8',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    margin: 5,
+  pinkText: {
+    color: '#6A0C38',
   },
-  otherChipText: {
-    fontSize: 16,
+  greenText: {
+    color: '#0C381E',
+  },
+  blueText: {
+    color: '#054359',
+  },
+  orangeText: {
+    color: '#55330D',
+  },
+  otherButton: {
+    backgroundColor: '#D2B48C', // Light brown/tan color
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 25,
+    marginTop: 20,
+    width: '80%',
+    alignSelf: 'center',
+  },
+  otherButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
     color: '#fff',
+    fontFamily: 'Manjari-Bold',
+    textAlign: 'center',
   },
   navigationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
+    alignItems: 'flex-end', // Align to the right
+    justifyContent: 'flex-end', // Align to the bottom
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
   },
-  backButton: {
-    backgroundColor: '#9e9e9e',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
+  nextButton: {
+    backgroundColor: 'transparent',
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  submitButton: {
-    backgroundColor: '#2196f3',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+  arrowIcon: {
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
   },
 });

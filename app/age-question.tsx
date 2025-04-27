@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Slider from '@react-native-community/slider';
 
@@ -74,7 +74,10 @@ export default function AgeQuestion() {
             style={styles.nextButton} 
             onPress={handleNext}
           >
-            <Text style={styles.buttonText}>Next</Text>
+            <Image 
+              source={require('../assets/images/circle.png')} 
+              style={styles.arrowIcon} 
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -102,8 +105,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   questionText: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
+    fontFamily: 'Manjari-Bold',
     marginBottom: 40,
     textAlign: 'center',
   },
@@ -112,13 +116,13 @@ const styles = StyleSheet.create({
   },
   ageDisplayContainer: {
     backgroundColor: '#ffcdd2',
-    paddingVertical: 12,
-    paddingHorizontal: 40,
+    paddingVertical: 22,
+    paddingHorizontal: 50,
     borderRadius: 30,
     marginBottom: 40,
   },
   ageDisplay: {
-    fontSize: 36,
+    fontSize: 64,
     fontWeight: 'bold',
     color: '#000',
   },
@@ -128,7 +132,7 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: '100%',
-    height: 40,
+    height: 80,
   },
   sliderLabelsContainer: {
     flexDirection: 'row',
@@ -141,23 +145,27 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 15,
-    fontSize: 14,
+    fontSize: 20,
   },
   navigationContainer: {
     alignItems: 'flex-end',
-    marginTop: 20,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
   },
   nextButton: {
-    backgroundColor: '#d4a88e',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
+    backgroundColor: 'transparent',
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'flex-end',
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  arrowIcon: {
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
+  }
 });
