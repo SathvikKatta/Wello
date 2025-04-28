@@ -13,9 +13,6 @@ const loadFonts = async () => {
 export default function Index() {
   const [dietaryRestrictions, setDietaryRestrictions] = useState<string[]>([]);
   const [fontsLoaded, setFontsLoaded] = useState(false);
-export default function Index() {
-  const [dietaryRestrictions, setDietaryRestrictions] = useState<string[]>([]);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
   const router = useRouter();
 
   // Load fonts when the component mounts
