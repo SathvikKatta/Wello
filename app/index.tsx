@@ -13,6 +13,9 @@ const loadFonts = async () => {
 export default function Index() {
   const [dietaryRestrictions, setDietaryRestrictions] = useState<string[]>([]);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+export default function Index() {
+  const [dietaryRestrictions, setDietaryRestrictions] = useState<string[]>([]);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   const router = useRouter();
 
   // Load fonts when the component mounts
@@ -60,17 +63,17 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.questionContainer}>
-    
+   
  
-        
+       
         <View style={styles.contentContainer}>
           <Text style={styles.questionText}>
             Do you have any{'\n'}<Text style={styles.highlightGreen}>dietary restrictions</Text>?
           </Text>
-          
+         
           <TouchableOpacity
             style={[
-              styles.optionButton, 
+              styles.optionButton,
               styles.pinkOption,
               dietaryRestrictions.includes('Vegetarian') && styles.selectedOption
             ]}
@@ -79,10 +82,10 @@ export default function Index() {
             <Text style={[styles.optionText, { color: '#6A0C38' }]}>Vegetarian</Text>
             <Image source={require('../assets/images/carrot.png')} style={styles.optionImage} />
           </TouchableOpacity>
-          
+         
           <TouchableOpacity
             style={[
-              styles.optionButton, 
+              styles.optionButton,
               styles.greenOption,
               dietaryRestrictions.includes('Vegan') && styles.selectedOption
             ]}
@@ -91,10 +94,10 @@ export default function Index() {
             <Text style={[styles.optionText, { color: '#0C381E' }]}>Vegan</Text>
             <Image source={require('../assets/images/salad.png')} style={styles.optionImage} />
           </TouchableOpacity>
-          
+         
           <TouchableOpacity
             style={[
-              styles.optionButton, 
+              styles.optionButton,
               styles.blueOption,
               dietaryRestrictions.includes('Kosher') && styles.selectedOption
             ]}
@@ -103,10 +106,10 @@ export default function Index() {
             <Text style={[styles.optionText, { color: '#054359' }]}>Kosher</Text>
             <Image source={require('../assets/images/star.png')} style={styles.optionImage} />
           </TouchableOpacity>
-          
+         
           <TouchableOpacity
             style={[
-              styles.optionButton, 
+              styles.optionButton,
               styles.orangeOption,
               dietaryRestrictions.includes('Halal') && styles.selectedOption
             ]}
@@ -115,10 +118,10 @@ export default function Index() {
             <Text style={[styles.optionText, { color: '#55330D' }]}>Halal</Text>
             <Image source={require('../assets/images/moon.png')} style={styles.optionImage} />
           </TouchableOpacity>
-          
+         
           <TouchableOpacity
             style={[
-              styles.optionButton, 
+              styles.optionButton,
               styles.purpleOption,
               dietaryRestrictions.includes('Other') && styles.selectedOption
             ]}
@@ -128,10 +131,10 @@ export default function Index() {
             <Image source={require('../assets/images/otherButton.png')} style={styles.optionImage} />
           </TouchableOpacity>
         </View>
-        
+       
         <View style={styles.navigationContainer}>
-          <TouchableOpacity 
-            style={styles.nextButton} 
+          <TouchableOpacity
+            style={styles.nextButton}
             onPress={handleNext}
           >
             <Image source={require('../assets/images/circle.png')} style={styles.arrowIcon} />
@@ -142,9 +145,10 @@ export default function Index() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
-    marginTop: 100, 
+    marginTop: 100,
     flex: 1,
     backgroundColor: '#2e2e2e',
     padding: 10,
