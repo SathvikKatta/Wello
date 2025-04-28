@@ -1,5 +1,7 @@
 import requests
 
+# Converts from Barcode to an actual product
+
 # Define the base URL and endpoint
 base_url = "https://api.upcitemdb.com/prod/trial/lookup"
 upc_code = "016000141544 "  # Example UPC code
@@ -68,58 +70,10 @@ def get_nutrition_info(product_title, api_key):
 
 title, nutrition_data = get_nutrition_info(Product_Title, "GhkIxCiYKlUO2usa4lfiepZ7EFW1imkDNTxaO1Xv")
 
-# Create a string to save everything
-if title and nutrition_data:
-    output_lines = [
-        f"Product Title: {Product_Title}",
-        f"Brand: {product.get('brand', 'N/A')}",
-        f"Description: {product.get('description', 'N/A')}",
-        f"\n=== Nutritional Information for 100g of {title} ==="
-]
-
-for nutrient in nutrition_data.get("foodNutrients", []):
-    name = nutrient.get("nutrient", {}).get("name", "")
-    amount = nutrient.get("amount")
-    unit = nutrient.get("nutrient", {}).get("unitName", "")
-    if amount is not None:
-        output_lines.append(f"{name}: {amount} {unit}")
-
-# Save to text file
-with open("nutrition_output.txt", "w") as file:
-    file.write("\n".join(output_lines))
 
 
-# Gemini Integration
 
-API_KEY = "AIzaSyBz7vzeI6jvS28Lh8LXUb8JJlSadjOoMTQ"  # Replace with Gemini or OpenAI key
 
-import google.generativeai as genai
-
-# Replace with your actual API key
-genai.configure(api_key="AIzaSyBz7vzeI6jvS28Lh8LXUb8JJlSadjOoMTQ")
-
-# Load the Gemini model
-model = genai.GenerativeModel(model_name="models/gemini-1.5-pro-latest")
-
-# Example prompt
-prompt = "Use all the nutritional information extracted form the open source food database and list pros and cons of taking the food. Here is the data + "
-
-# Generate a response
-response = model.generate_content(prompt)
-# Print the generated content
-print(response.text)
-
-with open("nutrition_output.txt", "r") as file:
-    content = file.read()
-
-prompt = f"""
-Given the following product and its nutritional information, list 3 pros and 3 cons of eating it:
-
-{content}
-"""
-
-response = chat.send_message(prompt)
-print(response.text.strip())
 
 
 

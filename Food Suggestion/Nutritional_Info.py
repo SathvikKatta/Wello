@@ -40,7 +40,7 @@ def get_nutrition_info(product_title, api_key):
         unit = nutrient.get("nutrient", {}).get("unitName", "")
         if amount is not None:
             print(f"{name}: {amount} {unit}")
-]
+
 
 # Check to see if the function works
 get_nutrition_info("egg", "GhkIxCiYKlUO2usa4lfiepZ7EFW1imkDNTxaO1Xv")
