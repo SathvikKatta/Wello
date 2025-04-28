@@ -6,6 +6,7 @@ export default function RootLayout() {
     <>
       <StatusBar style="dark" />
       <Stack>
+        
         <Stack.Screen 
           name="index" 
           options={{ 

@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     padding: 20,
-    paddingTop: 40,
+    paddingTop: 70,
     backgroundColor: '#FFF4EC',
   },
   avatar: {

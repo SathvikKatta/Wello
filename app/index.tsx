@@ -1,10 +1,61 @@
-
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
+import * as Font from 'expo-font';
 
-export default function HomeScreen() {
+// Function to load the custom font
+const loadFonts = async () => {
+  await Font.loadAsync({
+    'Manjari-Bold': require('../assets/fonts/Manjari-Bold.ttf'),
+  });
+};
+
+export default function Index() {
+  const [dietaryRestrictions, setDietaryRestrictions] = useState<string[]>([]);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   const router = useRouter();
+
+  // Load fonts when the component mounts
+  useEffect(() => {
+    const loadAndSetFonts = async () => {
+      await loadFonts();
+      setFontsLoaded(true);
+    };
+    
+    loadAndSetFonts();
+  }, []);
+
+  // Handler for dietary restrictions selection
+  const handleDietarySelection = (restriction: string) => {
+    if (dietaryRestrictions.includes(restriction)) {
+      setDietaryRestrictions(
+        dietaryRestrictions.filter(item => item !== restriction)
+      );
+    } else {
+      setDietaryRestrictions([...dietaryRestrictions, restriction]);
+    }
+  };
+
+  // Navigate to the next screen and pass the data
+  const handleNext = () => {
+    router.push({
+      pathname: '/weight-height',
+      params: {
+        dietaryRestrictions: JSON.stringify(dietaryRestrictions)
+      }
+    });
+  };
+
+  // Display a loading state while fonts are loading
+  if (!fontsLoaded) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto', fontSize: 20 }}>
+          Loading...
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

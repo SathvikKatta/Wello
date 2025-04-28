@@ -101,7 +101,7 @@ export default function FoodDetailScreen() {
             </View>
             <View style={styles.ratingRow}>
               <FontAwesome name="star" size={32} color="#F3BE4D" />
-              <Text style={styles.ratingText}> 4.7/5</Text>
+              <Text style={styles.ratingText}>4.7/5</Text>
             </View>
           </View>
           <Ionicons name="bookmark" size={40} color="#E6C882" />

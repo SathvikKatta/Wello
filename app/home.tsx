@@ -2,8 +2,14 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 // Import the NavigationBar component
 import NavigationBar from '../components/NavigationBar';
+import { useRouter, usePathname } from 'expo-router';
+
+// Import the avatar image
+const avatarImage = require('../assets/images/Intersect.png');
 
 export default function Home() {
+    const router = useRouter();
+  
   // Mock data for recommendations
   const recommendations = [
     {
@@ -28,16 +34,13 @@ export default function Home() {
     },
   ];
 
-  // Direct navigation function
-  const navigateToScreen = (screen: string) => {
-    window.location.href = screen;
-  };
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.profileImage} />
+        {/* Use the avatar image instead of the placeholder View */}
+        <Image source={avatarImage} style={styles.profileImage} />
         <TouchableOpacity style={styles.menuButton}>
           <View style={styles.menuLine}></View>
           <View style={styles.menuLine}></View>
@@ -46,7 +49,7 @@ export default function Home() {
       </View>
 
       {/* Welcome Text */}
-      <Text style={styles.welcomeText}>Welcome, Veronica</Text>
+      <Text style={styles.welcomeText}>Welcome, Charlotte</Text>
 
       {/* Main Content Scroll */}
       <ScrollView style={styles.contentScroll} showsVerticalScrollIndicator={false}>
@@ -60,17 +63,16 @@ export default function Home() {
               style={styles.plateImage}
               resizeMode="contain"
             />
-            <TouchableOpacity 
-              style={styles.medicineButton}
-              onPress={() => navigateToScreen('/medicine')}
-            >
-              {/* Replace the placeholder view with the medicine button image */}
-              <Image 
-                source={require('../assets/images/medicineButton.png')} 
-                style={styles.medicineIcon}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
+<TouchableOpacity 
+  style={styles.medicineButton}
+  onPress={() => router.push('/medicine')}
+>
+  <Image 
+    source={require('../assets/images/medicineButton.png')} 
+    style={styles.medicineIcon}
+    resizeMode="contain"
+  />
+</TouchableOpacity>
           </View>
         </View>
 
@@ -149,7 +151,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#c8a286',
   },
   menuButton: {
     justifyContent: 'space-between',
