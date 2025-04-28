@@ -4,12 +4,10 @@ import { Camera, CameraView } from "expo-camera";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
-
 type BarcodeData = {
- type: string;
- data: string;
+  type: string;
+  data: string;
 };
-
 
 export default function Barcode() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -20,14 +18,13 @@ export default function Barcode() {
   const cameraRef = useRef<CameraView>(null);
   const router = useRouter();
 
- useEffect(() => {
-   const getCameraPermissions = async () => {
-     const { status } = await Camera.requestCameraPermissionsAsync();
-     setHasPermission(status === "granted");
-   };
-   getCameraPermissions();
- }, []);
-
+  useEffect(() => {
+    const getCameraPermissions = async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+    getCameraPermissions();
+  }, []);
 
   useEffect(() => {
     if (barcodeData) {
@@ -62,6 +59,8 @@ export default function Barcode() {
             geminiOutput: data.gemini_output,
             nutritionInfo: data.nutrition_info,
             title: data.product_title,
+            analysis: data.analysis,
+            rating: data.rating,
           },
         });
       })
@@ -98,20 +97,19 @@ export default function Barcode() {
     }
   };
 
- if (hasPermission === null) return <Text>Requesting camera permission...</Text>;
- if (hasPermission === false) return <Text>No access to camera</Text>;
+  if (hasPermission === null) return <Text>Requesting camera permission...</Text>;
+  if (hasPermission === false) return <Text>No access to camera</Text>;
 
-
- return (
-   <View style={styles.container}>
-     <CameraView
-       onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-       barcodeScannerSettings={{
-         barcodeTypes: ["qr", "pdf417", "upc_a", "ean8", "ean13", "aztec"],
-       }}
-       style={styles.camera}
-     />
-
+  return (
+    <View style={styles.container}>
+      <CameraView
+        ref={cameraRef}
+        onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+        barcodeScannerSettings={{
+          barcodeTypes: ["qr", "pdf417", "upc_a", "ean8", "ean13", "aztec"],
+        }}
+        style={styles.camera}
+      />
 
       <View style={styles.overlay}>
         <View style={styles.scanFrame} />
@@ -124,6 +122,19 @@ export default function Barcode() {
           <Text style={styles.successText}>
             {barcodeData ? "Barcode Scanned!" : "Photo Captured!"}
           </Text>
+
+          {/* Scan Again button */}
+          <TouchableOpacity
+            style={styles.scanAgainButton}
+            onPress={() => {
+              setScanned(false);
+              setBarcodeData(null);
+              setImageBase64(null);
+              setIsTakingPicture(false);
+            }}
+          >
+            <Text style={styles.scanAgainText}>Scan Again</Text>
+          </TouchableOpacity>
         </View>
       )}
 
@@ -131,15 +142,15 @@ export default function Barcode() {
         <TouchableOpacity style={styles.iconButton}>
           <FontAwesome name="image" size={30} color="white" />
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.cameraButton}
           onPress={takePicture}
           disabled={scanned || isTakingPicture}
         >
           <View style={styles.cameraButtonInner} />
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.iconButton}>
           <AntDesign name="search1" size={30} color="white" />
         </TouchableOpacity>
@@ -147,7 +158,6 @@ export default function Barcode() {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "black", justifyContent: "center" },
@@ -173,7 +183,8 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     position: "absolute",
-    bottom: 180,
+    marginTop: 20,
+    bottom: 160,
     backgroundColor: "rgba(0,0,0,0.7)",
     padding: 20,
     borderRadius: 10,
@@ -184,6 +195,18 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
     marginTop: 10,
+    fontWeight: "bold",
+  },
+  scanAgainButton: {
+    marginTop: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+  },
+  scanAgainText: {
+    color: "white",
+    fontSize: 16,
     fontWeight: "bold",
   },
   bottomButtons: {
